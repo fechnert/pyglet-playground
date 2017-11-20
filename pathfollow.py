@@ -18,9 +18,11 @@ def on_draw():
     window.clear()
     batch = pyglet.graphics.Batch()
 
-    path = get_bezier_path([(100, 100), (200, 300), (300, 100)])
+    points = get_bezier_path([(100, 100), (200, 300), (300, 100)])
+    points += get_line_path((100, 100), (200, 200))
+    points += get_line_path((200, 200), (300, 100))
 
-    for point in path:
+    for point in points:
         batch.add(1, pyglet.gl.GL_POINTS, None, ('v2f', point), ('c3B', (0, 255, 0)))
 
     batch.draw()
