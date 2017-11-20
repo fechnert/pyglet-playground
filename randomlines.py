@@ -1,6 +1,12 @@
 import pyglet
 import random
 
+from pyglet.gl import *
+
+
+def random_rgb():
+    r255 = lambda: random.randint(0, 255)
+    return (r255(), r255(), r255())
 
 window = pyglet.window.Window(
     width=640,
@@ -9,6 +15,10 @@ window = pyglet.window.Window(
 )
 window.clear()
 
+glEnable(GL_BLEND)
+glEnable(GL_LINE_SMOOTH)
+glHint(GL_LINE_SMOOTH_HINT, GL_NICEST)
+glLineWidth(8)
 
 @window.event
 def on_draw():
@@ -22,21 +32,18 @@ def on_draw():
         dst_x = random.randint(0, window.width)
         dst_y = random.randint(0, window.height)
 
+        rgb1 = ()
+
+
         batch.add(
             2,
-            pyglet.gl.GL_LINES,
+            GL_LINES,
             None,
             ('v2f', (src_x, src_y, dst_x, dst_y)),
-            ('c3B', (255, 0, 0, 0, 255, 0)),
+            ('c3B', random_rgb() + random_rgb()),
         )
 
     batch.draw()
 
-
-def update(dt):
-    pass
-
-
 if __name__ == '__main__':
-    pyglet.clock.schedule_interval(update, 1/16.0)
     pyglet.app.run()
