@@ -1,3 +1,9 @@
+import pyglet
+
+from pyglet.gl import *
+from math import cos, sin, radians
+
+
 def get_line_path(start, end):
     """Draw lines with the Bresenham algorithm"""
 
@@ -12,18 +18,18 @@ def get_line_path(start, end):
 
     # rotate line
     if is_steep:
-        src_y, src_y = src_y, src_y
+        src_x, src_y = src_y, src_x
         dst_x, dst_y = dst_y, dst_x
 
     # Swap start and end points if necessary and store swap state
     swapped = False
-    if src_y > dst_x:
-        src_y, dst_x = dst_x, src_y
+    if src_x > dst_x:
+        src_x, dst_x = dst_x, src_x
         src_y, dst_y = dst_y, src_y
         swapped = True
 
     # Recalculate differentials
-    delta_x = dst_x - src_y
+    delta_x = dst_x - src_x
     delta_y = dst_y - src_y
 
     # Calculate error
@@ -33,7 +39,7 @@ def get_line_path(start, end):
     # Iterate over bounding box generating points between start and end
     y = src_y
     points = []
-    for x in range(src_y, dst_x + 1):
+    for x in range(src_x, dst_x + 1):
         coord = (y, x) if is_steep else (x, y)
         points.append(coord)
         error -= abs(delta_y)
@@ -62,11 +68,10 @@ def get_bezier_path(points):
     coordinate_array_y = []
 
     for point in points:
-        print(point)
         coordinate_array_x.append(point[0])
         coordinate_array_y.append(point[1])
 
-    steps = 1000
+    steps = 250
     for k in range(steps):
         t = float(k) / (steps - 1)
         x = int(B(coordinate_array_x, 0, len(points)-1, t))
@@ -74,3 +79,22 @@ def get_bezier_path(points):
         path.append((x, y))
 
     return path
+
+
+def get_circle_vertex(center_coord, radius=10, points=10):
+    vert = []
+
+    for i in range(points):
+        angle = radians(float(i) / points * 360.0)
+        x = radius * cos(angle) + center_coord[0]
+        y = radius * sin(angle) + center_coord[1]
+        vert += [x, y]
+
+    return pyglet.graphics.vertex_list(points, ('v2f', vert), ('c3B', (255, 0, 0) * points))
+
+
+def enable_antialiasing():
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+    glEnable(GL_BLEND)
+    glEnable(GL_LINE_SMOOTH)
+    glHint(GL_LINE_SMOOTH_HINT, GL_NICEST)
