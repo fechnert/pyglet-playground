@@ -1,10 +1,25 @@
+"""
+Primitive shapes
+"""
+
 import pyglet
 
-from pyglet.gl import *
-from math import cos, sin, radians
+from math import radians, sin, cos
 
 
-def get_line_path(start, end):
+def circle(center_coord, radius=10, points=10):
+    vert = []
+
+    for i in range(points):
+        angle = radians(float(i) / points * 360.0)
+        x = radius * cos(angle) + center_coord[0]
+        y = radius * sin(angle) + center_coord[1]
+        vert += [x, y]
+
+    return pyglet.graphics.vertex_list(points, ('v2f', vert), ('c3B', (255, 0, 0) * points))
+
+
+def line(start, end):
     """Draw lines with the Bresenham algorithm"""
 
     # Setup initial conditions
@@ -54,7 +69,7 @@ def get_line_path(start, end):
     return points
 
 
-def get_bezier_path(points):
+def bezier(points):
     """Draw an bézier curve"""
 
     path = []
@@ -79,22 +94,3 @@ def get_bezier_path(points):
         path.append((x, y))
 
     return path
-
-
-def get_circle_vertex(center_coord, radius=10, points=10):
-    vert = []
-
-    for i in range(points):
-        angle = radians(float(i) / points * 360.0)
-        x = radius * cos(angle) + center_coord[0]
-        y = radius * sin(angle) + center_coord[1]
-        vert += [x, y]
-
-    return pyglet.graphics.vertex_list(points, ('v2f', vert), ('c3B', (255, 0, 0) * points))
-
-
-def enable_antialiasing():
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
-    glEnable(GL_BLEND)
-    glEnable(GL_LINE_SMOOTH)
-    glHint(GL_LINE_SMOOTH_HINT, GL_NICEST)
