@@ -15,14 +15,14 @@ WALLCOLLISION = True
 
 class Entity(object):
 
-    def __init__(self, x, y, color, radius=10):
+    def __init__(self, x, y, color=(255, 255, 255), speed_x=0.25, speed_y=0.25, radius=10, filled=False):
         self.x = x
         self.y = y
         self.color = color
+        self.speed_x = speed_x
+        self.speed_y = speed_y
         self.radius = radius
-
-        self.speed_x = (random.random() - 0.5) * 1000
-        self.speed_y = (random.random() - 0.5) * 1000
+        self.filled = filled
 
     def update(self, dt):
 
@@ -30,14 +30,20 @@ class Entity(object):
         self.y += self.speed_y * dt
 
         if WALLCOLLISION:
-            if self.x - self.radius + 5 < 0 or self.x + self.radius + 5 > WIDTH:
-                self.speed_x *= -1
-            if self.y - self.radius + 5 < 0 or self.y + self.radius + 5 > HEIGHT:
-                self.speed_y *= -1
+
+            if self.x - self.radius <= 0:
+                self.speed_x = abs(self.speed_x)
+            if self.x + self.radius >= WIDTH:
+                self.speed_x = -self.speed_x
+
+            if self.y - self.radius <= 0:
+                self.speed_y = abs(self.speed_y)
+            if self.y + self.radius >= HEIGHT:
+                self.speed_y = -self.speed_y
 
 
     def draw(self):
-        circle((self.x, self.y), radius=self.radius, color=self.color).draw(pyglet.gl.GL_LINE_LOOP)
+        circle((self.x, self.y), radius=self.radius, color=self.color).draw(GL_POLYGON if self.filled else GL_LINE_LOOP)
 
 
 class SandboxWindow(pyglet.window.Window):
@@ -67,7 +73,13 @@ class SandboxWindow(pyglet.window.Window):
 
     def on_mouse_press(self, x, y, button, modifiers):
         if button == 1:
-            entity = Entity(x, y, random_color())
+            entity = Entity(
+                x, y, random_color(),
+                speed_x=(random.random() - 0.5) * 1000,
+                speed_y=(random.random() - 0.5) * 1000,
+                radius=random.randint(10, 15),
+                filled=random.choice([True, False])
+            )
             self.entities.append(entity)
 
 
