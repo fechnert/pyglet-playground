@@ -7,8 +7,11 @@ import pyglet
 from math import radians, sin, cos
 
 
-def circle(center_coord, radius=10, points=10):
+def circle(center_coord, radius=10, color=(255, 255, 255)):
     vert = []
+
+    # should be okay i guess
+    points = radius
 
     for i in range(points):
         angle = radians(float(i) / points * 360.0)
@@ -16,7 +19,7 @@ def circle(center_coord, radius=10, points=10):
         y = radius * sin(angle) + center_coord[1]
         vert += [x, y]
 
-    return pyglet.graphics.vertex_list(points, ('v2f', vert), ('c3B', (255, 0, 0) * points))
+    return pyglet.graphics.vertex_list(points, ('v2f', vert), ('c3B', color * points))
 
 
 def line(start, end):
