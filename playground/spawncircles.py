@@ -41,7 +41,6 @@ class Entity(object):
             if self.y + self.radius >= HEIGHT:
                 self.speed_y = -self.speed_y
 
-
     def draw(self):
         circle((self.x, self.y), radius=self.radius, color=self.color).draw(GL_POLYGON if self.filled else GL_LINE_LOOP)
 
@@ -55,10 +54,14 @@ class SandboxWindow(pyglet.window.Window):
         pyglet.gl.glClearColor(0, 0, 0, 255)
 
         self.entities = []
+        self.pause = False
 
         pyglet.app.run()
 
     def update(self, dt):
+        if self.pause:
+            return
+
         for entity in self.entities:
             entity.update(dt)
 
@@ -66,10 +69,13 @@ class SandboxWindow(pyglet.window.Window):
         self.clear()
 
         enable_antialiasing()
-        glLineWidth(5)
+        glLineWidth(3)
 
         for entity in self.entities:
             entity.draw()
+
+        if self.pause:
+            pyglet.text.Label('PAUSED', font_size=15, x=WIDTH//2, y=HEIGHT//2, anchor_x='center', anchor_y='center').draw()
 
     def on_mouse_press(self, x, y, button, modifiers):
         if button == 1:
@@ -81,6 +87,11 @@ class SandboxWindow(pyglet.window.Window):
                 filled=random.choice([True, False])
             )
             self.entities.append(entity)
+
+    def on_key_press(self, symbol, modifiers):
+        super().on_key_press(symbol, modifiers)
+        if symbol == pyglet.window.key.SPACE:
+            self.pause = not self.pause
 
 
 if __name__ == '__main__':
