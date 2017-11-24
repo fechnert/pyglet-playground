@@ -11,7 +11,7 @@ def circle(center_coord, radius=10, color=(255, 255, 255)):
     vert = []
 
     # should be okay i guess
-    points = radius
+    points = radius * 2
 
     for i in range(points):
         angle = radians(float(i) / points * 360.0)

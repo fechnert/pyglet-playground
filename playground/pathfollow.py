@@ -2,7 +2,7 @@ import time
 import pyglet
 import random
 
-from utils import get_line_path, get_bezier_path, get_circle_vertex
+from utils.shapes import line, bezier, circle
 
 
 window = pyglet.window.Window(
@@ -12,16 +12,16 @@ window = pyglet.window.Window(
 )
 window.clear()
 
-PATH = get_line_path((200, 100), (600, 100))
-PATH += get_bezier_path([(600, 100), (700, 100), (700, 200)])
-PATH += get_bezier_path([(700, 200), (700, 300), (600, 300)])
+PATH = line((200, 100), (600, 100))
+PATH += bezier([(600, 100), (700, 100), (700, 200)])
+PATH += bezier([(700, 200), (700, 300), (600, 300)])
 
-#PATH += get_line_path((600, 300), (200, 300))
-PATH += get_bezier_path([(600, 300), (500, 300), (500, 250), (400, 250)])
-PATH += get_bezier_path([(400, 250), (300, 250), (300, 300), (200, 300)])
+#PATH += line((600, 300), (200, 300))
+PATH += bezier([(600, 300), (500, 300), (500, 250), (400, 250)])
+PATH += bezier([(400, 250), (300, 250), (300, 300), (200, 300)])
 
-PATH += get_bezier_path([(200, 300), (100, 300), (100, 200)])
-PATH += get_bezier_path([(100, 200), (100, 100), (200, 100)])
+PATH += bezier([(200, 300), (100, 300), (100, 200)])
+PATH += bezier([(100, 200), (100, 100), (200, 100)])
 POS = 0
 
 
@@ -37,7 +37,7 @@ def on_draw():
 
     batch.draw()
 
-    get_circle_vertex(PATH[int(POS)]).draw(pyglet.gl.GL_LINE_LOOP)
+    circle(PATH[int(POS)]).draw(pyglet.gl.GL_LINE_LOOP)
 
 
 def update(dt):
