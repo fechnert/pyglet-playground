@@ -1,3 +1,24 @@
+"""
+First attempt to draw and rotate custom shapes.
+
+TODO: improve debug output
+TODO: use batches to optimize drawing of similar shapes
+TODO: make the spaceship accelerate and breake
+TODO: respect spaceship angle while moving
+TODO: add different entities like asteroids
+TODO: make the spaceship shoot lasers
+TODO: let the lasers collide with asteorids
+TODO: react on the collision of entities or lasers
+TODO: differentiate between the coordinate grid and the visible section of the window
+TODO: add scaling of visible section to allow zooming
+
+2D collision detection:
+  - https://developer.mozilla.org/kab/docs/Games/Techniques/2D_collision_detection
+  - https://www.robloxdev.com/articles/2D-Collision-Detection
+  - https://www.sevenson.com.au/actionscript/sat/
+
+"""
+
 import pyglet
 
 from math import sin, cos, radians
